@@ -1,22 +1,32 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class ResumeCreate(BaseModel):
-    """Schema for creating resume"""
+class ResumeBase(BaseModel):
+    """Base schema for Resume"""
     title: str
     content: str
 
+class ResumeCreate(ResumeBase):
+    """Schema for creating a new resume"""
+    pass
+
 class ResumeUpdate(BaseModel):
-    """Schema for updating resume"""
+    """Schema for updating a resume"""
     title: Optional[str] = None
     content: Optional[str] = None
 
-class ResumeResponse(BaseModel):
+class ResumeResponse(ResumeBase):
     """Schema for returning resume data"""
-    id:int
-    title: str
-    content: str
-    owner_id: int
-
+    id: int
+    user_id: int
+    
     class Config:
-        orm_mode = True # Allows SQLAlchemy models to be converted to Pydantic models
+        from_attributes = True  # Updated for Pydantic v2
+
+class ResumeList(BaseModel):
+    """Schema for listing resumes"""
+    id: int
+    title: str
+    
+    class Config:
+        from_attributes = True
